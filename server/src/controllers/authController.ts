@@ -22,7 +22,7 @@ export const register = async (req: Request, res: Response) => {
     });
     const userSaving = await newUser.save();
     console.log("User registed succesfully");
-    res.status(200).send("UserRegisted");
+    res.status(200).send("User Registed");
 };
 
 export const login = async (req: Request, res: Response) => {
