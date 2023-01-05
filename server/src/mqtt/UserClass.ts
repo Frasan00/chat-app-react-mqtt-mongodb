@@ -4,7 +4,7 @@ import { topics } from "./topics";
 const Dispatcher = require("mqtt-dispatcher");
 
 
-export class User{
+export class UserClass{
 
     protected clientMqtt: MqttClient;
     protected userName: string;

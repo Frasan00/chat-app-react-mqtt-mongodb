@@ -10,6 +10,8 @@ import { tokenGenerator } from "../utilities/generateToken";
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { UserClass } from "../mqtt/UserClass";
+import User from "../database/User";
 
 export const register = async (req: Request, res: Response) => {
     const { userName, password } = req.body;
@@ -42,6 +44,8 @@ export const login = async (req: Request, res: Response) => {
     const saveSession = await newSession.save();
 
     // mqtt part to do
+    const newUser = new UserClass(userName);
+    newUser.start();
 
     console.log(userName+" logged in");
     res.status(200).send(userName+" logged in");
