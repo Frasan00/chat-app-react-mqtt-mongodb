@@ -18,7 +18,7 @@ export const AuthPage = ({ isLogged, setIsLogged }) => {
     };
 
     const handleSignUp = () => {
-        if (userName === "" || password === "") return console.log("Insert credentials");
+        if (userName === "" || password === "") return console.log("Invalid credentials");
         const data = {
             userName: userName,
             password: password
@@ -29,7 +29,17 @@ export const AuthPage = ({ isLogged, setIsLogged }) => {
     };
 
     const handleLogIn = () => {
-
+        if (userName === "" || password === "") return console.log("Invalid credentials");
+        const data = {
+            userName: userName,
+            password: password
+        };
+        axios.post("http://localhost:5000/auth/login", data)
+        .then(res => {
+            console.log(res.data);
+            setIsLogged(true);
+        })
+        .catch((err) => console.error(err));
     };
 
     return (
