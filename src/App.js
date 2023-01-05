@@ -1,19 +1,14 @@
 import './App.css';
 import "bootstrap/dist/css/bootstrap.css";
-import { React, useEffect } from 'react';
+import { React, useEffect, useState } from 'react';
 import { NavBar } from './components/NavBar';
 import { BrowserRouter as Router, Route, Switch, useHistory} from "react-router-dom";
 // pages
 import { AuthPage } from './Pages/AuthPage';
 
+  const [isLogged, setIsLogged] = useState(false);
 
 function App() {
-
-  const history = useHistory();
-
-  useEffect(() => {
-    history.push('/auth');
-  }, []);
 
   return (
     <Router>
@@ -23,7 +18,7 @@ function App() {
         <div className='AuthPath'>
           <Switch>
             <Route path="/auth">
-              <AuthPage/>
+              <AuthPage isLogged={isLogged} setIsLogged={setIsLogged}/>
             </Route>
           </Switch>
         </div>
