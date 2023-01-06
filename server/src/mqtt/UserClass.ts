@@ -17,6 +17,6 @@ export class UserClass{
     };
 
     start(){
-        this.clientMqtt.publish(topics.alive, this.userName);
+        
     };
 };

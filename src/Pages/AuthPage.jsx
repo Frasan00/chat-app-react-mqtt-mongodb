@@ -2,10 +2,9 @@ import { React, useState } from "react";
 import axios from "axios";
 
 
-export const AuthPage = ({ isLogged, setIsLogged }) => {
+export const AuthPage = ({ isLogged, setIsLogged, userName, setUserName }) => {
 
     // states
-    const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
 
     // handlers

@@ -8,9 +8,10 @@ const Dispatcher = require("mqtt-dispatcher");
 
 export class Server{
 
+    // server it's used to handle messages
     protected clientMqtt: MqttClient;
     protected dispatcher: any;
-    protected userList: string[];
+    userList: any[];
 
     constructor(){
         this.clientMqtt = connectMqtt();
@@ -19,11 +20,12 @@ export class Server{
     };
 
     start(){
-        this.dispatcher.addRule(topics.alive, this.handleNewUser.bind(this));
+        // user are already handled in authController
     };
 
-    protected handleNewUser(_: any, message: string){
-        this.userList.push(message);
-        console.log(message+" logged in");
+    addUser(newUser: any){
+        this.userList.push(newUser);
     };
+
+
 };
