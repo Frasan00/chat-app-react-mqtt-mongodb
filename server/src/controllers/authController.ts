@@ -7,7 +7,6 @@ import { createMessageSchema } from "../database/messagesModel";
 import { findUser } from "../utilities/findUser";
 import { tokenGenerator } from "../utilities/generateToken";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 // mqtt
 import { UserClass } from "../mqtt/UserClass";
 import { SERVER } from "..";
@@ -23,8 +22,6 @@ export const register = async (req: Request, res: Response) => {
         password: hashedPassword
     });
     const userSaving = await newUser.save();
-
-    // to do: add user messages to the db
 
     console.log("User registed succesfully");
     res.status(200).send("User Registed");
@@ -50,7 +47,6 @@ export const login = async (req: Request, res: Response) => {
     const newUser = new UserClass(userName);
     newUser.start();
     SERVER.addUser(newUser);
-    console.log(SERVER.userList[0].toString(), SERVER.userList[1].toString())
 
     console.log(userName+" logged in");
     res.status(200).send(userName+" logged in");

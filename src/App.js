@@ -11,8 +11,6 @@ function App() {
 
   // must have userName in the client
   const [userName, setUserName] = useState("");
-  const [isLogged, setIsLogged] = useState(false);
-
 
   return (
     <Router>
@@ -28,7 +26,6 @@ function App() {
 
             <Route path="/auth">
               <AuthPage 
-              isLogged={isLogged} setIsLogged={setIsLogged}
               userName={userName} setUserName={setUserName}
               />
             </Route>
