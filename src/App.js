@@ -29,20 +29,24 @@ function App() {
               <AuthPage 
               userName={userName} setUserName={setUserName}
               setIsLogged={setIsLogged}
-              />
-
-              {isLogged ? 
-                <Route exact path="/auth">
-                  <Redirect to="/chat" />
-                </Route>: null
-              }
+            />
             </Route>
 
             <Route path="/chat">
               <ChatPage
-              userName={userName} setIsLogged={setIsLogged}
-              />
+                userName={userName} setIsLogged={setIsLogged}
+            />
             </Route>
+
+              {/* if the user is logged is redirected to chat, else he's redirected to the authentication */}
+              {isLogged ? 
+                <Route exact path="/auth">
+                  <Redirect to="/chat" />
+                </Route>: 
+                <Route exact path="/chat">
+                   <Redirect to="/auth" />
+                </Route>
+              }
 
           </Switch>
         </div>
