@@ -5,12 +5,13 @@ import { NavBar } from './components/NavBar';
 import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 // pages
 import { AuthPage } from './Pages/AuthPage';
+import { ChatPage } from './Pages/ChatPage';
 
 
 function App() {
 
-  // must have userName in the client
   const [userName, setUserName] = useState("");
+  const [isLogged, setIsLogged] = useState(null);
 
   return (
     <Router>
@@ -27,9 +28,17 @@ function App() {
             <Route path="/auth">
               <AuthPage 
               userName={userName} setUserName={setUserName}
+              setIsLogged={setIsLogged}
               />
             </Route>
 
+            {isLogged ? <Redirect to="/chat" />: null}
+
+            <Route path="/chat">
+              <ChatPage
+              userName={userName} setIsLogged={setIsLogged}
+              />
+            </Route>
 
           </Switch>
         </div>

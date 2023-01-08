@@ -2,11 +2,11 @@ import { React, useState } from "react";
 import axios from "axios";
 
 
-export const AuthPage = ({ userName, setUserName }) => {
+export const AuthPage = ({ userName, setUserName, setIsLogged }) => {
 
     // states
     const [password, setPassword] = useState("");
-    let [invalidCredential, setInvalidCredential] = useState(null);
+    const [invalidCredential, setInvalidCredential] = useState(null);
 
     // handlers
     const handleUserName = (event) => {
@@ -43,6 +43,7 @@ export const AuthPage = ({ userName, setUserName }) => {
         axios.post("http://localhost:5000/auth/login", data)
         .then(res => {
             setInvalidCredential(null);
+            setIsLogged(true);
             console.log(res.data);
         })
         .catch((err) => {
