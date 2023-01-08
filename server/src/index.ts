@@ -17,7 +17,7 @@ export const SERVER = new Server();
 const app = express();
 const PORT = process.env.PORT;
 const corsOptions ={
-    origin:'http://localhost:3000', 
+    origin:'http://localhost:3000',
     credentials:true,
     optionSuccessStatus:200
 };
