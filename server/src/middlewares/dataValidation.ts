@@ -6,7 +6,7 @@ export const dataValidation = [
     body("password").exists().isAlphanumeric().isLength({ min: 6, max: 16 }),
     (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
-        if (errors.array().length > 0) return res.status(401).json({errors: errors.array()});
+        if (errors.array().length > 0) return res.status(401).send(-1);
         next();
     }];
 

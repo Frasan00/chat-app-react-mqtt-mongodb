@@ -30,9 +30,13 @@ function App() {
               userName={userName} setUserName={setUserName}
               setIsLogged={setIsLogged}
               />
-            </Route>
 
-            {isLogged ? <Redirect to="/chat" />: null}
+              {isLogged ? 
+                <Route exact path="/auth">
+                  <Redirect to="/chat" />
+                </Route>: null
+              }
+            </Route>
 
             <Route path="/chat">
               <ChatPage

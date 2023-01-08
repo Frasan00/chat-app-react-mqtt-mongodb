@@ -7,6 +7,8 @@ export const AuthPage = ({ userName, setUserName, setIsLogged }) => {
     // states
     const [password, setPassword] = useState("");
     const [invalidCredential, setInvalidCredential] = useState(null);
+    const [userAlreadyExists, setUserAlreadyExists] = useState(null);
+    const [userAlreadyLogged, setUserAlreadyLogged] = useState(null);
 
     // handlers
     const handleUserName = (event) => {
@@ -26,10 +28,17 @@ export const AuthPage = ({ userName, setUserName, setIsLogged }) => {
         axios.post("http://localhost:5000/auth/register", data)
         .then(res => {
             setInvalidCredential(null);
+            setUserAlreadyExists(null);
             console.log(res.data);
         })
-        .catch((err) => {
-            setInvalidCredential(true);
+        .catch(err => {
+            if(err.response.data === "User already exists") setUserAlreadyExists(true);
+            else {
+                // there can only be one error at a time
+                setUserAlreadyExists(null);
+                setUserAlreadyLogged(null);
+                setInvalidCredential(true);
+            };
             console.error(err);
         });
     };
@@ -47,14 +56,18 @@ export const AuthPage = ({ userName, setUserName, setIsLogged }) => {
             console.log(res.data);
         })
         .catch((err) => {
-            setInvalidCredential(true);
+            if (err.response.data === "User already logged in") setUserAlreadyLogged(true);
+            else{
+                setUserAlreadyExists(null)
+                setUserAlreadyLogged(null);
+                setInvalidCredential(true);
+            };
             console.error(err);
         });
     };
 
     return (
-        <form>
-            
+        <form>  
         <br></br>
             <div className="mb-3">
                 <label for="exampleInputEmail1" className="form-label">User</label>
@@ -65,6 +78,8 @@ export const AuthPage = ({ userName, setUserName, setIsLogged }) => {
                 <input type="password" className="form-control" id="exampleInputPassword1" onChange={handlePassword}/>
                 <div id="passwordHelpBlock" className="form-text">Your password must be 6-16 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.</div>
                 <div className="wrongCredential">{invalidCredential && <p class="text-danger">Invalid credential</p>}</div>
+                <div className="userExists">{userAlreadyExists && <p class="text-danger">This user name already exists</p>}</div>
+                <div className="userExists">{userAlreadyLogged && <p class="text-danger">User already logged in</p>}</div>
             </div>
             <div className="btn-group" role="group" aria-label="Basic example">
                 <button type="button" className="btn btn-primary" onClick={() => handleSignUp()}>Sign Up</button>

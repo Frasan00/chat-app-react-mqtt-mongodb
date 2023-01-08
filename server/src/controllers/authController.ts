@@ -23,8 +23,8 @@ export const register = async (req: Request, res: Response) => {
     });
     const userSaving = await newUser.save();
 
-    console.log("User registed succesfully");
-    res.status(200).send("User Registed");
+    console.log(userName+" registed");
+    res.status(200).send(userName+" registed");
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -32,6 +32,7 @@ export const login = async (req: Request, res: Response) => {
     const { userName, password } = req.body;
     const user: any = await findUser(userName);
     if(!user) return res.status(404).send("User doesn't exist");
+    if(await Session.findOne({userName: userName})) return res.status(400).send("User already logged in");
     if(await bcrypt.compare(password, user.password) === false) return res.status(400).send("Wrong password ");
     
     // session
