@@ -54,9 +54,9 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const logout = async (req: Request, res: Response) => {
-
-};
-
-export const eliminateAccount = async (req: Request, res: Response) => {
-
+    const userName = req.params.userName;
+    const deleteUser = await Session.findOneAndDelete({userName: userName})
+    .catch((err) => res.status(400).send("Couldn't delete the user: "+userName));
+    console.log(userName+" logged out");
+    res.status(200).send(userName+" logged out");
 };

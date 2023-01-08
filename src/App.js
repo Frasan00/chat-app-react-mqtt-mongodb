@@ -13,6 +13,19 @@ function App() {
   const [userName, setUserName] = useState("");
   const [isLogged, setIsLogged] = useState(null);
 
+  // keep data when a page is refreshed in the browser
+  useEffect(() => {
+    const storedUserName = localStorage.getItem('username');
+    if (storedUserName) {
+      setUserName(storedUserName);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('username', userName);
+  }, [userName]);
+
+
   return (
     <Router>
       <div className='MainApp'>
@@ -21,24 +34,20 @@ function App() {
         <div className='switchPaths'>
           <Switch>
 
-            <Route exact path="/">
-              <Redirect to="/auth" />
-            </Route>
-
             <Route path="/auth">
               <AuthPage 
               userName={userName} setUserName={setUserName}
               setIsLogged={setIsLogged}
               />
 
-              {/* if the user is logged is redirected to chat, else he's redirected to the authentication */}
+              {/* if the user is logged is redirected to the chat page*/}
               {isLogged ? 
                 <Route exact path="/auth">
                   <Redirect to="/chat" />
                 </Route>: 
-                <Route exact path="/chat">
-                   <Redirect to="/auth" />
-                </Route>
+                                <Route exact path="/chat">
+                                <Redirect to="/auth" />
+                              </Route>
               }
             </Route>
 
