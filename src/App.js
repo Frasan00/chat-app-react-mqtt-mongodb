@@ -90,8 +90,7 @@ function App() {
 
             <Route path="/chat">
               <ChatPage
-              userName={userName} jwt={jwt} setIsChatting={setIsChatting} 
-              setChattingWith={setChattingWith}
+              userName={userName} jwt={jwt} chattingWith={chattingWith}
               />
             </Route>
 
