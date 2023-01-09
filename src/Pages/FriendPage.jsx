@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import axios from "axios";
 
-export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
+export function FriendPage({ userName, setIsLogged, jwt, setIsChatting, setChattingWith }){
 
     const [newFriend, setNewFriend] = useState("");
     const [friendList, setFriendList] = useState([]);
@@ -71,15 +71,15 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
             console.log({friends: res.data});
         })
         .catch(err => {
-            // user doesn't exist
-            if(err.response.data === "The user you are trying to be friend with doesn't exist") setUserDoesntExist(true); 
+            if(err.response.data === "The user you are trying to be friend with doesn't exist") setUserDoesntExist(true); // user doesn't exist
             else setAlreadyFriend(true);
             console.error(err);
         });
     };
 
     const handleNewChat = (friend) => {
-        
+        setChattingWith(friend);
+        setIsChatting(true);
     };
 
     const handleDeleteFriend = (friend) => {
@@ -111,7 +111,7 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
                 <br></br>
                 <div className="row g-3 align-items-center">
                     <div className="col-auto">
-                        <input type="text" onChange={handleFriendInput} placeHolder="Search a friend" className="form-control" aria-describedby="passwordHelpInline"/>
+                        <input type="text" onChange={handleFriendInput} placeholder="Search a friend" className="form-control" aria-describedby="passwordHelpInline"/>
                         <button onClick={() => handleNewFriend()} className="btn btn-primary">Search</button> 
                     </div>
                 </div>

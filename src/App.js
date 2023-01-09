@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-do
 // pages
 import { AuthPage } from './Pages/AuthPage';
 import { FriendPage } from './Pages/FriendPage';
+import { ChatPage } from './Pages/ChatPage';
 
 
 function App() {
@@ -27,7 +28,9 @@ function App() {
     return storedKey ? JSON.parse(storedKey) : false;
   });
 
-  const [isChatting, setIsChatting] = useState(null);
+  const [isChatting, setIsChatting] = useState(false);
+
+  const [chattingWith, setChattingWith] = useState("");
 
   // use effect that stores the states in browser memory
   useEffect(() => {
@@ -51,7 +54,7 @@ function App() {
             </Route>
 
 
-              {/* if the user is logged is redirected to the chat page, else is redirected to the auth page */}
+              {/* if the user is logged is redirected to the friends page, else is redirected to the auth page */}
               {isLogged === true ? 
                 <Route exact path="/auth">
                   <Redirect to="/friends" />
@@ -59,6 +62,16 @@ function App() {
                   <Route exact path="/friends">
                     <Redirect to="/auth" />
                   </Route>
+              }
+
+              {/* if the user is chatting is redirected to the chat page, else is redirected to the friends page */}
+              {isChatting === true ? 
+              <Route exact path="/friends">
+                <Redirect to="/chat" />
+              </Route>: 
+                <Route exact path="/chat">
+                  <Redirect to="/friends" />
+                </Route>
               }
 
             <Route path="/auth">
@@ -71,7 +84,14 @@ function App() {
             <Route path="/friends">
               <FriendPage
               userName={userName} setIsLogged={setIsLogged}
-              jwt={jwt} setIsChatting={setIsChatting}
+              jwt={jwt} setIsChatting={setIsChatting} setChattingWith={setChattingWith}
+              />
+            </Route>
+
+            <Route path="/chat">
+              <ChatPage
+              userName={userName} jwt={jwt} setIsChatting={setIsChatting} 
+              setChattingWith={setChattingWith}
               />
             </Route>
 
