@@ -5,7 +5,10 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
 
     const [newFriend, setNewFriend] = useState("");
     const [friendList, setFriendList] = useState([]);
+    // errors
     const [userDoesntExist, setUserDoesntExist] = useState(false);
+    const [alreadyFriend, setAlreadyFriend] = useState(false);
+    const [friendLimit, setFriendLimit] = useState(false);
 
     // initializes friendList with useEffect and updates it everytime newFriend is changed
     useEffect(() => {
@@ -36,27 +39,41 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
     };
 
     const handleFriendInput = (event) => {
-        setUserDoesntExist(false); // with another try when the user starts to write again the error is toggled off
+        // with another try when the user starts to write again the input the errors are toggled off
+        setUserDoesntExist(false); 
+        setFriendLimit(false);
+        setAlreadyFriend(false);
         setNewFriend(event.target.value);
     };
 
     const handleNewFriend = () => {
+        /* generic checks */
+        // eliminates errors if make another request that passes previous checks
+        setUserDoesntExist(false); 
+        setFriendLimit(false);
+        setAlreadyFriend(false);
+        // friend list limit length 10
+        if(friendList.length == 10) { setFriendLimit(true); return; }
+
+        // actual req
+        const data = {
+            userName: userName,
+            friendToAdd: newFriend
+        };
         const config = {
             headers: {
               Authorization: `Bearer ${jwt}`,
             },
-          };
-          const data = {
-            userName: userName,
-            friendToAdd: newFriend
-          };
+        };
         axios.post("http://localhost:5000/friends/addFriend", data, config)
         .then(res => {
             setFriendList([...friendList, newFriend]);
             console.log({friends: res.data});
         })
         .catch(err => {
-            setUserDoesntExist(true); 
+            // user doesn't exist
+            if(err.response.data === "The user you are trying to be friend with doesn't exist") setUserDoesntExist(true); 
+            else setAlreadyFriend(true);
             console.error(err);
         });
     };
@@ -100,6 +117,8 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
                 </div>
             </h2> 
             {userDoesntExist === true ? <p className="text-danger">User doesn't exist</p>: null}
+            {friendLimit === true ? <p className="text-danger">You can't have more that 10 friends</p>: null}
+            {alreadyFriend === true ? <p className="text-danger">You already have this friend</p>: null}
 
             <hr></hr>
             <br></br>

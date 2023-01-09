@@ -11,10 +11,13 @@ export const addNewFriend = async(req: Request, res: Response) => {
     if(!checkIfFriendExists) return res.status(404).send("The user you are trying to be friend with doesn't exist");
     const user = await User.findOne({userName: userName});
     if(!user) return res.status(404).send("User not found");
+    
     // duplicates
+    let foundDuplicate;
     user.friendList.forEach(friend => {
-        if(friend === friendToAdd) return res.status(400).send("You are already friends");
-    })
+        if(friend === friendToAdd) foundDuplicate = true; 
+    });
+    if (foundDuplicate) return res.status(400).send("You are already friends");
 
     const newList = [...user.friendList, friendToAdd]
     const addingFriend = await User.findOneAndUpdate({userName: userName}, {friendList: newList});
@@ -32,7 +35,6 @@ export const getFriendList = async(req: Request, res: Response) => {
 
 export const deleteFriend = async(req: Request, res: Response) => {
     const { userName, friendToRemove } = req.body;
-    console.log(userName, friendToRemove)
     if(!userName || !friendToRemove) return res.status(404).send("Missing informations ");
     const user = await User.findOne({userName: userName});
     if(!user) return res.status(404).send("User not found");

@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get("/:userName", validateJwt, getFriendList);
 router.post("/addfriend", validateJwt, addNewFriend);
-router.delete("/delete", deleteFriend);
+router.delete("/delete", validateJwt, deleteFriend);
 
 export default router;
