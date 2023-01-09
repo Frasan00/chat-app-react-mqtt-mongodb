@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 // db
 import User from "../database/User";
 import Session from "../database/Session";
-import { createMessageSchema } from "../database/messagesModel";
 // utilities
 import { findUser } from "../utilities/findUser";
 import { tokenGenerator } from "../utilities/generateToken";
@@ -10,7 +9,6 @@ import bcrypt from "bcrypt";
 // mqtt
 import { UserClass } from "../mqtt/UserClass";
 import { SERVER } from "..";
-
 
 export const register = async (req: Request, res: Response) => {
     const { userName, password } = req.body;
@@ -50,7 +48,8 @@ export const login = async (req: Request, res: Response) => {
     SERVER.addUser(newUser);
 
     console.log(userName+" logged in");
-    res.status(200).send(userName+" logged in");
+    // sends the token to the client
+    res.status(200).send(token);
 };
 
 export const logout = async (req: Request, res: Response) => {

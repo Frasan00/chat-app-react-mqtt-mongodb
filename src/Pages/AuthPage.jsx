@@ -2,7 +2,7 @@ import { React, useState } from "react";
 import axios from "axios";
 
 
-export const AuthPage = ({ userName, setUserName, setIsLogged }) => {
+export const AuthPage = ({ userName, setUserName, setIsLogged, setJwt }) => {
 
     // states
     const [password, setPassword] = useState("");
@@ -53,7 +53,8 @@ export const AuthPage = ({ userName, setUserName, setIsLogged }) => {
         .then(res => {
             setInvalidCredential(null);
             setIsLogged(true);
-            console.log(res.data);
+            setJwt(res.data); // the res is the web token
+            console.log(userName+" logged in ");
         })
         .catch((err) => {
             if (err.response.data === "User already logged in") setUserAlreadyLogged(true);
