@@ -34,20 +34,25 @@ function App() {
         <div className='switchPaths'>
           <Switch>
 
+            {/* initializes the page to auth */}
+            <Route exact path="/">
+              <Redirect to="/auth" />
+            </Route>
+
             <Route path="/auth">
               <AuthPage 
               userName={userName} setUserName={setUserName}
               setIsLogged={setIsLogged}
               />
 
-              {/* if the user is logged is redirected to the chat page*/}
+              {/* if the user is logged is redirected to the chat page */}
               {isLogged ? 
                 <Route exact path="/auth">
                   <Redirect to="/chat" />
                 </Route>: 
-                                <Route exact path="/chat">
-                                <Redirect to="/auth" />
-                              </Route>
+                  <Route exact path="/chat">
+                    <Redirect to="/auth" />
+                  </Route>
               }
             </Route>
 
