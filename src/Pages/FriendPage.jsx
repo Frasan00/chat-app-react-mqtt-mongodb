@@ -6,12 +6,27 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
     const [newFriend, setNewFriend] = useState("");
     const [friendList, setFriendList] = useState([]);
 
-    // to do: initialize friendList with useEffect
+    // initializes friendList with useEffect and updates it everytime newFriend is changed
+    useEffect(() => {
+        const config = {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          };
+        axios.get("http://localhost:5000/friends/"+userName, config)
+        .then(res => {
+            setFriendList(res.data);
+            console.log({friends: res.data});
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }, [])
     
     const handleLogOut = () => {
         axios.delete("http://localhost:5000/auth/logout/"+userName)
         .then(res => {
-            setIsLogged(null);
+            setIsLogged(false);
             console.log(res.data);
         })
         .catch(err => {
@@ -23,9 +38,25 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
         setNewFriend(event.target.value);
     };
 
-    // to do
     const handleNewFriend = () => {
-
+        const config = {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          };
+          const data = {
+            userName: userName,
+            friendToAdd: newFriend
+          };
+        axios.post("http://localhost:5000/friends/addFriend", data, config)
+        .then(res => {
+            // gives back the friend list so i can update it and redyplay it (same for remove)
+            setFriendList(res.data);
+            console.log({friends: res.data});
+        })
+        .catch(err => {
+            console.error(err);
+        });
     };
 
     const handleNewChat = (friend) => {
@@ -33,6 +64,23 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
     };
 
     const handleDeleteFriend = (friend) => {
+        const config = {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          };
+          const data = {
+            userName: userName,
+            friendToRemove: friend
+          };
+        axios.delete("http://localhost:5000/friends/delete", data, config)
+        .then(res => {
+            setFriendList(res.data);
+            console.log({friends: res.data});
+        })
+        .catch(err => {
+            console.error(err);
+        });
     };
 
     return(

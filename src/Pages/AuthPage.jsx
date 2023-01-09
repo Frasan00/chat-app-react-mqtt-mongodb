@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import axios from "axios";
 
 
@@ -9,6 +9,13 @@ export const AuthPage = ({ userName, setUserName, setIsLogged, setJwt }) => {
     const [invalidCredential, setInvalidCredential] = useState(null);
     const [userAlreadyExists, setUserAlreadyExists] = useState(null);
     const [userAlreadyLogged, setUserAlreadyLogged] = useState(null);
+
+    useEffect(() => {
+        // when you are or return to the auth page, everything is resetted
+        setUserName("");
+        setIsLogged(false);
+        setJwt("");
+    }, [])
 
     // handlers
     const handleUserName = (event) => {
@@ -59,7 +66,7 @@ export const AuthPage = ({ userName, setUserName, setIsLogged, setJwt }) => {
         .catch((err) => {
             if (err.response.data === "User already logged in") setUserAlreadyLogged(true);
             else{
-                setUserAlreadyExists(null)
+                setUserAlreadyExists(null);
                 setUserAlreadyLogged(null);
                 setInvalidCredential(true);
             };

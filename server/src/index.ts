@@ -2,7 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoute from "./routes/authRoute";
+import friendsRoute from "./routes/friendsRoute";
 import cors from "cors";
+import { corsOptions } from "./utilities/corsOptions";
 import { Server } from "./mqtt/Server";
 dotenv.config();
 
@@ -16,15 +18,11 @@ export const SERVER = new Server();
 
 const app = express();
 const PORT = process.env.PORT;
-const corsOptions ={
-    origin:'http://localhost:3000',
-    credentials:true,
-    optionSuccessStatus:200
-};
 
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/auth", authRoute);
+app.use("/friends", friendsRoute);
 
 app.get("/", (req, res) => {
     res.send("Chat-app Api");

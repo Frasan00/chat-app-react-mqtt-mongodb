@@ -10,23 +10,30 @@ import { FriendPage } from './Pages/FriendPage';
 
 function App() {
 
-  const [userName, setUserName] = useState("");
-  const [jwt, setJwt] = useState("");
-  const [isLogged, setIsLogged] = useState(null);
+  const [userName, setUserName] = useState(() => {
+    const storedUserName = localStorage.getItem('username');
+    return storedUserName ? localStorage.getItem('username'): "";
+  });
+
+  const [jwt, setJwt] = useState(() => {
+    const storedJwt = localStorage.getItem('jwt');
+    return storedJwt ? localStorage.getItem('jwt'): "";
+  });
+
+  const [isLogged, setIsLogged] = useState(() => {
+    // it's initialized to the key localStorage item, in order to display the correct page
+    const storedKey = localStorage.getItem('key');
+    return storedKey ? JSON.parse(storedKey) : false;
+  });
+
   const [isChatting, setIsChatting] = useState(null);
 
-  // keep data when a page is refreshed in the browser
-  useEffect(() => {
-    const storedUserName = localStorage.getItem('username');
-    const storedJwt = localStorage.getItem('jwt');
-    if (storedUserName) { setUserName(storedUserName); };
-    if (storedJwt) { setJwt(storedJwt); };
-  }, []);
-
+  // use effect that stores the states in browser memory
   useEffect(() => {
     localStorage.setItem('username', userName);
     localStorage.setItem('jwt', jwt);
-  }, [userName, jwt]);
+    localStorage.setItem('key', JSON.stringify(isLogged));
+  }, [userName, jwt, isLogged]);
 
 
   return (
@@ -44,7 +51,7 @@ function App() {
 
 
               {/* if the user is logged is redirected to the chat page, else is redirected to the auth page */}
-              {isLogged ? 
+              {isLogged === true ? 
                 <Route exact path="/auth">
                   <Redirect to="/friends" />
                 </Route>: 
