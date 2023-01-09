@@ -10,6 +10,7 @@ import { FriendPage } from './Pages/FriendPage';
 
 function App() {
 
+  // useStates that need to be passed between components
   const [userName, setUserName] = useState(() => {
     const storedUserName = localStorage.getItem('username');
     return storedUserName ? localStorage.getItem('username'): "";

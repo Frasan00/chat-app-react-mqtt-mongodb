@@ -32,12 +32,13 @@ export const getFriendList = async(req: Request, res: Response) => {
 
 export const deleteFriend = async(req: Request, res: Response) => {
     const { userName, friendToRemove } = req.body;
+    console.log(userName, friendToRemove)
     if(!userName || !friendToRemove) return res.status(404).send("Missing informations ");
     const user = await User.findOne({userName: userName});
     if(!user) return res.status(404).send("User not found");
     const filteredList = user.friendList.filter((friend) => friend !== friendToRemove);
     user.friendList = filteredList;
-    await user.save();
+    const saveChanges = await user.save();
     console.log(userName+ " is no longer friend with "+friendToRemove);
     res.status(200).send(user.friendList);
 };

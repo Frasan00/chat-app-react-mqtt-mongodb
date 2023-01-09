@@ -85,9 +85,9 @@ export const AuthPage = ({ userName, setUserName, setIsLogged, setJwt }) => {
                 <label for="exampleInputPassword1" className="form-label">Password</label>
                 <input type="password" className="form-control" id="exampleInputPassword1" onChange={handlePassword}/>
                 <div id="passwordHelpBlock" className="form-text">Your password must be 6-16 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.</div>
-                <div className="wrongCredential">{invalidCredential && <p class="text-danger">Invalid credential</p>}</div>
-                <div className="userExists">{userAlreadyExists && <p class="text-danger">This user name already exists</p>}</div>
-                <div className="userExists">{userAlreadyLogged && <p class="text-danger">User already logged in</p>}</div>
+                <div className="wrongCredential">{invalidCredential && <p className="text-danger">Invalid credential</p>}</div>
+                <div className="userExists">{userAlreadyExists && <p className="text-danger">This user name already exists</p>}</div>
+                <div className="userExists">{userAlreadyLogged && <p className="text-danger">User already logged in</p>}</div>
             </div>
             <div className="btn-group" role="group" aria-label="Basic example">
                 <button type="button" className="btn btn-primary" onClick={() => handleSignUp()}>Sign Up</button>

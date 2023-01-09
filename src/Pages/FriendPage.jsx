@@ -5,6 +5,7 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
 
     const [newFriend, setNewFriend] = useState("");
     const [friendList, setFriendList] = useState([]);
+    const [userDoesntExist, setUserDoesntExist] = useState(false);
 
     // initializes friendList with useEffect and updates it everytime newFriend is changed
     useEffect(() => {
@@ -21,7 +22,7 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
         .catch(err => {
             console.error(err);
         });
-    }, [])
+    }, []);
     
     const handleLogOut = () => {
         axios.delete("http://localhost:5000/auth/logout/"+userName)
@@ -35,6 +36,7 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
     };
 
     const handleFriendInput = (event) => {
+        setUserDoesntExist(false); // with another try when the user starts to write again the error is toggled off
         setNewFriend(event.target.value);
     };
 
@@ -50,11 +52,11 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
           };
         axios.post("http://localhost:5000/friends/addFriend", data, config)
         .then(res => {
-            // gives back the friend list so i can update it and redyplay it (same for remove)
-            setFriendList(res.data);
+            setFriendList([...friendList, newFriend]);
             console.log({friends: res.data});
         })
         .catch(err => {
+            setUserDoesntExist(true); 
             console.error(err);
         });
     };
@@ -64,16 +66,17 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
     };
 
     const handleDeleteFriend = (friend) => {
+        const data = {
+            userName: userName,
+            friendToRemove: friend
+        };
         const config = {
             headers: {
               Authorization: `Bearer ${jwt}`,
             },
-          };
-          const data = {
-            userName: userName,
-            friendToRemove: friend
-          };
-        axios.delete("http://localhost:5000/friends/delete", data, config)
+            data:data
+        };
+        axios.delete("http://localhost:5000/friends/delete", config)
         .then(res => {
             setFriendList(res.data);
             console.log({friends: res.data});
@@ -96,13 +99,14 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting }){
                     </div>
                 </div>
             </h2> 
+            {userDoesntExist === true ? <p className="text-danger">User doesn't exist</p>: null}
 
             <hr></hr>
             <br></br>
             <h3>Friend list</h3>
             {friendList.length !== 0 ? 
-                friendList.map(friend => 
-                    <div className="friendLIst">
+                friendList.map((friend) => 
+                    <div className="friendList">
                         <li>{friend}
                         <button onClick={() => handleNewChat(friend)} className="btn btn-secondary btn-sm">Chat!</button>
                         <button onClick={() => handleDeleteFriend(friend)} className="btn btn-danger btn-sm">X</button>
