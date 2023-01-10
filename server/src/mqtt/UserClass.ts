@@ -3,7 +3,6 @@ import connectMqtt from "./connectionToServer";
 import { topics } from "./topics";
 const Dispatcher = require("mqtt-dispatcher");
 
-
 export class UserClass{
 
     protected clientMqtt: MqttClient;
@@ -22,6 +21,7 @@ export class UserClass{
 
     async getMessages(friend: string){
         const history = await this.db.find({ chatWith: friend });
+        if (history.length === 0) return [];
         return history[0].messages;
     };
 
@@ -50,9 +50,25 @@ export class UserClass{
     // when a friend is added, user and the friend add a rule
     startListenTo(friend: string){
         this.dispatcher.addRule(topics.receiveMessage(friend, this.userName), this.handleNewMessage.bind(this));
+        console.log(this.userName+" listening on "+topics.receiveMessage(friend, this.userName)+" topic");
     };
 
-    protected handleNewMessage(_: any, message: string){
-        console.log("ok")
+    protected async handleNewMessage(topic: string, message: string){
+        // stores incoming messages as "1": received
+        console.log(topic.split("/")[1])
+        const receivedBy = topic.split("/")[1] // contains the friend that sent the message
+        const check = await this.db.findOne({chatWith: receivedBy});
+        if(!check){
+            const newChat = new this.db({
+                chatWith: receivedBy,
+                messages: [["1", message]]
+            });
+            await newChat.save();
+            return console.log("Message sent from "+this.userName+" to "+receivedBy);
+        };
+        // adds message to db
+        const newMessageList = [...check.messages, ["0", message]];
+        const savingMessage = await this.db.findOneAndUpdate({chatWith: receivedBy}, {messages: newMessageList});
+
     };
 };

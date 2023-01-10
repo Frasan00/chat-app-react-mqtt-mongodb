@@ -6,6 +6,7 @@ export const ChatPage = ({ userName, jwt, chattingWith }) => {
 
     const [chatHystory, setChatHistory] = useState([]);
     const [message, setMessage] = useState("");
+    const [observer, setObserver] = useState(0); // is updated every 10ms 
 
     // useEffect for initialization of chat hystory
     useEffect(() => {
@@ -22,7 +23,14 @@ export const ChatPage = ({ userName, jwt, chattingWith }) => {
         .catch(err => {
             console.error(err);
         });
-    }, []);
+    }, [observer]);
+
+    // checks in essentially real time (every 10ms) new messages (i wanted to use only react, mqtt and mongo without socket and ws, i had to be fantasioso)
+    setInterval(() => {
+        let newValue;
+        if(observer !== 100) newValue = observer+1
+        else newValue = 0;
+        setObserver(newValue)}, 10);
 
     // handlers
     const handleMessageInput = (event) => { setMessage(event.target.value); };

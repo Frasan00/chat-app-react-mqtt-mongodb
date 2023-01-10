@@ -21,20 +21,24 @@ export class Server{
     };
 
     async start(){
-        // initializes the server with all users
+        // initializes the server with all users and dispaches incoming messages
         const users = await User.find();
         if(!users) return;
         users.map((user) => {
             if(user.userName){
                 const db = createMessageSchema(user.userName);
                 let newUser: UserClass = new UserClass(user.userName, db);
+                // listen to all friends
+                user.friendList.map((friend) => {
+                    newUser.startListenTo(friend);
+                })
                 this.addUser(newUser);
             };
         });
     };
 
     protected getUsers(){
-        return this.userList
+        return this.userList;
     };
 
     addUser(newUser: UserClass){

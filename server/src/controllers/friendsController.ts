@@ -19,7 +19,7 @@ export const addNewFriend = async(req: Request, res: Response) => {
     user.friendList.forEach(friend => {
         if(friend === friendToAdd) foundDuplicate = true; 
     });
-    if (foundDuplicate) return res.status(400).send("You are already friend with this user");
+    if(foundDuplicate) return res.status(400).send("You are already friend with this user");
     
     const newList = [...user.friendList, friendToAdd];
     const addingFriend = await User.findOneAndUpdate({userName: userName}, {friendList: newList});
