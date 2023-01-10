@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoute from "./routes/authRoute";
 import friendsRoute from "./routes/friendsRoute";
+import chatRoute from "./routes/chatRoute";
 import cors from "cors";
 import { corsOptions } from "./utilities/corsOptions";
 import { Server } from "./mqtt/Server";
@@ -14,7 +15,9 @@ mongoose.connect("mongodb://localhost:27017/chat-app")
 .catch((err) => console.error(err));
 
 // Server mqtt that needs to be traposrted to controllers
-export const SERVER = new Server();
+const temp = new Server();
+temp.start();
+export const SERVER = temp;
 
 const app = express();
 const PORT = process.env.PORT;
@@ -23,6 +26,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/auth", authRoute);
 app.use("/friends", friendsRoute);
+app.use("/chat", chatRoute);
 
 app.get("/", (req, res) => {
     res.send("Chat-app Api");

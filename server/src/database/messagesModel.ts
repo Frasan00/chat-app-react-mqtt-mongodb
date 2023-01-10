@@ -11,10 +11,11 @@ export const createMessageSchema = (userName: string) => {
         },
         messages: {
             // Number can be {0: your message, 1: friend's message}, String is the data of the message
-            type: [[Number, String]] 
+            type: [[String, String]],
+            default: []
         }
     });
-    mongoose.model(userName, messageSchema);
+    return mongoose.model(userName, messageSchema);
 };
 
 

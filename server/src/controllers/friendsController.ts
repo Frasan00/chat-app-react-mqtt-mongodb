@@ -1,7 +1,9 @@
 import User from "../database/User";
 import Session from "../database/Session";
+import { SERVER } from "..";
 import { Request, Response } from "express";
 import { createMessageSchema } from "../database/messagesModel";
+import { UserClass } from "../mqtt/UserClass";
 
 export const addNewFriend = async(req: Request, res: Response) => {
     // generic checks
@@ -18,9 +20,17 @@ export const addNewFriend = async(req: Request, res: Response) => {
         if(friend === friendToAdd) foundDuplicate = true; 
     });
     if (foundDuplicate) return res.status(400).send("You are already friend with this user");
-
-    const newList = [...user.friendList, friendToAdd]
+    
+    const newList = [...user.friendList, friendToAdd];
     const addingFriend = await User.findOneAndUpdate({userName: userName}, {friendList: newList});
+
+    // mqtt part: when a friend is added both user and newFriend add a dispatcher
+    const mainUser = SERVER.findUser(userName);
+    const friend = SERVER.findUser(friendToAdd);
+    if (!mainUser || !friend) return res.status(402).send("Couldn't connect users ");
+    mainUser.startListenTo(friend.getUserName());
+    friend.startListenTo(mainUser.getUserName());
+
     console.log(userName+ " is now friend with "+friendToAdd);
     res.status(200).send(user.friendList);
 };

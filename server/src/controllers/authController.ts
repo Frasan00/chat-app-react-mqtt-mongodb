@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 // db
 import User from "../database/User";
 import Session from "../database/Session";
+import { createMessageSchema } from "../database/messagesModel";
 // utilities
 import { findUser } from "../utilities/findUser";
 import { tokenGenerator } from "../utilities/generateToken";
@@ -9,6 +10,8 @@ import bcrypt from "bcrypt";
 // mqtt
 import { UserClass } from "../mqtt/UserClass";
 import { SERVER } from "..";
+
+let newUserClass: UserClass;
 
 export const register = async (req: Request, res: Response) => {
     const { userName, password } = req.body;
@@ -21,6 +24,11 @@ export const register = async (req: Request, res: Response) => {
     });
     const userSaving = await newUser.save();
 
+    // mqtt side: when a user is registed is also created a user in mqtt and is added to the server
+    const db = createMessageSchema(userName);
+    newUserClass = new UserClass(userName, db);
+    SERVER.addUser(newUserClass);
+
     console.log(userName+" registed");
     res.status(200).send(userName+" registed");
 };
@@ -31,7 +39,7 @@ export const login = async (req: Request, res: Response) => {
     const user: any = await findUser(userName);
     if(!user) return res.status(404).send("User doesn't exist");
     if(await Session.findOne({userName: userName})) return res.status(400).send("User already logged in");
-    if(await bcrypt.compare(password, user.password) === false) return res.status(400).send("Wrong password ");
+    if(await bcrypt.compare(password, user.password) === false) return res.status(401).send("Wrong password ");
     
     // session
     const token = tokenGenerator(userName);
@@ -41,11 +49,6 @@ export const login = async (req: Request, res: Response) => {
         token: token
     });
     const saveSession = await newSession.save();
-
-    // mqtt side
-    const newUser = new UserClass(userName);
-    newUser.start();
-    SERVER.addUser(newUser);
 
     console.log(userName+" logged in");
     // sends the token to the client
