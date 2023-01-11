@@ -1,0 +1,26 @@
+version: '3'
+services:
+
+  client:
+    build: 
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "3000:3000"
+    deploy:
+      replicas: 3
+
+  server:
+    build: 
+      dockerfile: Dockerfile
+      context: ./server
+    ports:
+      - "5000:5000"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    restart: always

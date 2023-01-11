@@ -53,7 +53,7 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting, setChatt
         setFriendLimit(false);
         setAlreadyFriend(false);
         // friend list limit length 10
-        if(friendList.length == 10) { setFriendLimit(true); return; }
+        if(friendList.length === 10) { setFriendLimit(true); return; }
 
         // actual req
         const data = {
