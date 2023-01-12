@@ -5,7 +5,6 @@ import authRoute from "./routes/authRoute";
 import friendsRoute from "./routes/friendsRoute";
 import chatRoute from "./routes/chatRoute";
 import cors from "cors";
-import { corsOptions } from "./utilities/corsOptions";
 import { Server } from "./mqtt/Server";
 dotenv.config();
 
@@ -23,7 +22,7 @@ export const SERVER = temp;
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoute);
 app.use("/friends", friendsRoute);
