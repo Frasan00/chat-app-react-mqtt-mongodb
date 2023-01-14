@@ -8,8 +8,6 @@ import { AuthPage } from './Pages/AuthPage';
 import { FriendPage } from './Pages/FriendPage';
 import { ChatPage } from './Pages/ChatPage';
 
-process.env.CI = false
-
 
 function App() {
 

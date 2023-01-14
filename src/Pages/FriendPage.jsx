@@ -25,7 +25,7 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting, setChatt
         .catch(err => {
             console.error(err);
         });
-    }, []);
+    });
     
     const handleLogOut = () => {
         axios.delete("http://localhost:5000/auth/logout/"+userName)

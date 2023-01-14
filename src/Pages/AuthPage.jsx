@@ -15,7 +15,7 @@ export const AuthPage = ({ userName, setUserName, setIsLogged, setJwt }) => {
         setUserName("");
         setIsLogged(false);
         setJwt("");
-    }, [])
+    })
 
     // handlers
     const handleUserName = (event) => {
