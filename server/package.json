@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc --init",
     "start": "tsc && node dist/index.js",
-    "create": "babel src --out-dir dist"
+    "create": "tsc --outDir dist"
   },
   "keywords": [],
   "author": "",
