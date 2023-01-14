@@ -1,3 +1,7 @@
 [build]
   command = "npm run create"
-  functions = "dist/functions"
+  functions = "5functions"
+
+[dev]
+  command = "npm run start"
+  functions = "functions"
