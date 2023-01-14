@@ -1,5 +1,5 @@
 [build]
-  command = "npm run start5"
+  command = "npm run start"
   functions = "functions"
 
 [dev]
