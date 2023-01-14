@@ -9,7 +9,7 @@ import { Server } from "./mqtt/Server";
 dotenv.config();
 
 // mongodb connection
-const mongo_url = process.env.MONGO_URL || ""
+const mongo_url = process.env.MONGODB_URI || ""
 mongoose.connect(mongo_url)
 .then(() => console.log("Connected to the Database"))
 .catch((err) => console.error(err));
