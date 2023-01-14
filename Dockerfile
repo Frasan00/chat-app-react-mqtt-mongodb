@@ -10,7 +10,6 @@ RUN npm ci
 
 COPY /public ./public
 COPY /src ./src
-RUN npm run build
 
 EXPOSE 3000
 CMD ["npm", "run", "start"]
