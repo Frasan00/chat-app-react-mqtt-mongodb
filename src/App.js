@@ -10,6 +10,8 @@ import { ChatPage } from './Pages/ChatPage';
 
 
 function App() {
+  
+  process.env.CI = false;
 
   // useStates that need to be passed between components
   const [userName, setUserName] = useState(() => {
