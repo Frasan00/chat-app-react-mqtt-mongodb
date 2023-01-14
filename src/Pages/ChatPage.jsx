@@ -23,7 +23,7 @@ export const ChatPage = ({ userName, jwt, chattingWith }) => {
         .catch(err => {
             console.error(err);
         });
-    }, [observer, jwt, userName, chattingWith]);
+    }, [observer]);
 
     // checks in essentially real time (every 10ms) new messages (i wanted to use only react, mqtt and mongo without socket and ws, i had to be fantasioso)
     setInterval(() => {
