@@ -29,7 +29,7 @@ app.use("/friends", friendsRoute);
 app.use("/chat", chatRoute);
 
 app.get("/", (req, res) => {
-    res.send("Chat-app Api");
+    res.send('<h1>Chat-app api</h1>');
 });
 
 app.listen(PORT, () => console.log("Listening on port "+PORT));
