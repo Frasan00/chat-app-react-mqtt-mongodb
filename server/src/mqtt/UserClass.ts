@@ -17,6 +17,10 @@ export class UserClass{
         this.db = db;
     };
 
+    start(){
+        // to add in case is needed
+    };
+
     getUserName(){ return this.userName; };
 
     async getMessages(friend: string){
@@ -67,8 +71,8 @@ export class UserClass{
             return console.log("Message sent from "+this.userName+" to "+receivedBy);
         };
         // adds message to db
-        const newMessageList = [...check.messages, ["0", message]];
+        const newMessageList = [...check.messages, ["1", message]];
         const savingMessage = await this.db.findOneAndUpdate({chatWith: receivedBy}, {messages: newMessageList});
-
+        return console.log("Message sent from "+this.userName+" to "+receivedBy);
     };
 };

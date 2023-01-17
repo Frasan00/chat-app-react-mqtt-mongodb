@@ -12,6 +12,7 @@ export const AuthPage = ({ userName, setUserName, setIsLogged, setJwt }) => {
 
     useEffect(() => {
         // when you are or return to the auth page, everything is resetted
+        localStorage.clear();
         setUserName("");
         setIsLogged(false);
         setJwt("");

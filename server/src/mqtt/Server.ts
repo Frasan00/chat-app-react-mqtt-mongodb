@@ -31,7 +31,8 @@ export class Server{
                 // listen to all friends
                 user.friendList.map((friend) => {
                     newUser.startListenTo(friend);
-                })
+                });
+                newUser.start();
                 this.addUser(newUser);
             };
         });

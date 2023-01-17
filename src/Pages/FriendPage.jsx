@@ -28,9 +28,10 @@ export function FriendPage({ userName, setIsLogged, jwt, setIsChatting, setChatt
     }, []);
     
     const handleLogOut = () => {
+        // setting logged to false we'll be redirected to the auth page
+        setIsLogged(false);
         axios.delete("http://localhost:5000/auth/logout/"+userName)
         .then(res => {
-            setIsLogged(false);
             console.log(res.data);
         })
         .catch(err => {

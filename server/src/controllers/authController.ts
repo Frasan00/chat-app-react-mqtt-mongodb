@@ -27,6 +27,7 @@ export const register = async (req: Request, res: Response) => {
     // mqtt side: when a user is registed is also created a user in mqtt and is added to the server
     const db = createMessageSchema(userName);
     newUserClass = new UserClass(userName, db);
+    newUserClass.start();
     SERVER.addUser(newUserClass);
 
     console.log(userName+" registed");
