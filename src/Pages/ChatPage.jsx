@@ -1,24 +1,34 @@
-import { React, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import paho from "paho-mqtt";
 import "../App.css"; // centers the app and .form-group allines input and button
 
 export const ChatPage = ({ userName, jwt, chattingWith }) => {
 
     const [chatHystory, setChatHistory] = useState([]);
     const [message, setMessage] = useState("");
-    const [observer, setObserver] = useState(0); // is updated every 10ms 
+    const [clientMqtt, setClientMqtt] = useState(null);
+    const [observer, setObserver] = useState(0);
 
-    //socket. io part
-    setInterval(() =>{
-        // Every second checks for new messages, the new value is made to not let observer grow to much
-        let newValue;
-        if(observer !== 100) newValue = observer+1
-        else newValue = 0;
-        setObserver(newValue);
-    }, 1000);
-       
-    
-    // useEffect for initialization of chat hystory on mount and every second
+    // useEffect for initialization of chat hystory on mount and every every time a message is received
+    useEffect(() => {
+        // you have to have a running mqtt broker
+        const client = new paho.Client("broker.hivemq.com", Number(8000), "OrNKP26Dp0");
+        client.connect({
+            onSuccess: () => { client.subscribe(userName); console.log("Succesfully sub to "+userName); },
+        });
+        
+        // client will receive on "userName" topic the instruction to update the chat
+        client.onMessageArrived = (_, message) => {
+            console.log(message.toString());
+            let newValue = observer+1;
+            if (newValue > 100) return setObserver(0);
+            return setObserver(newValue);
+        };
+        setClientMqtt(client);
+    }, []);
+
+    // second useEffect that actually updates the chat
     useEffect(() => {
         const config = {
             headers: {

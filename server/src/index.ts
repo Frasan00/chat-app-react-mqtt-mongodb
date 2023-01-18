@@ -10,7 +10,6 @@ dotenv.config();
 
 // mongodb connection
 const mongo_url = process.env.MONGODB_URI || "";
-console.log(mongo_url)
 mongoose.set('strictQuery', false)
 mongoose.connect(mongo_url)
 .then(() => console.log("Connected to the Database"))

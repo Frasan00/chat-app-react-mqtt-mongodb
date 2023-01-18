@@ -18,7 +18,7 @@ export class UserClass{
     };
 
     start(){
-        // to add in case is needed
+        // can put something here if needed
     };
 
     getUserName(){ return this.userName; };
@@ -31,6 +31,8 @@ export class UserClass{
 
     publishMessage(sendTo: string, message: string){
         this.clientMqtt.publish(topics.sendMessage(this.userName, sendTo), message);
+        console.log("Told "+sendTo+" to update messages");
+        this.clientMqtt.publish(sendTo, "New message"); // tells the client is chatting with to update messages
         this.saveMessage(sendTo, message);
     };
 
@@ -59,7 +61,6 @@ export class UserClass{
 
     protected async handleNewMessage(topic: string, message: string){
         // stores incoming messages as "1": received
-        console.log(topic.split("/")[1])
         const receivedBy = topic.split("/")[1] // contains the friend that sent the message
         const check = await this.db.findOne({chatWith: receivedBy});
         if(!check){
@@ -67,7 +68,7 @@ export class UserClass{
                 chatWith: receivedBy,
                 messages: [["1", message]]
             });
-            await newChat.save();
+            const savingChat = await newChat.save();
             return console.log("Message sent from "+this.userName+" to "+receivedBy);
         };
         // adds message to db
