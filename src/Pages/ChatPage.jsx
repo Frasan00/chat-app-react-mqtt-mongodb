@@ -1,34 +1,38 @@
 import React, { useEffect, useState } from 'react';
+import { Buffer } from 'buffer';
+import process from 'process';
 import axios from 'axios';
-import paho from "paho-mqtt";
 import "../App.css"; // centers the app and .form-group allines input and button
+
+global.Buffer = Buffer
+global.process = process
+const mqtt = require("mqtt");
 
 export const ChatPage = ({ userName, jwt, chattingWith }) => {
 
     const [chatHystory, setChatHistory] = useState([]);
     const [message, setMessage] = useState("");
-    const [clientMqtt, setClientMqtt] = useState(null);
     const [observer, setObserver] = useState(0);
 
     // useEffect for initialization of chat hystory on mount and every every time a message is received
     useEffect(() => {
-        // you have to have a running mqtt broker
-        const client = new paho.Client("broker.hivemq.com", Number(8000), "OrNKP26Dp0");
-        client.connect({
-            onSuccess: () => { client.subscribe(userName); console.log("Succesfully sub to "+userName); },
-        });
-        
-        // client will receive on "userName" topic the instruction to update the chat
-        client.onMessageArrived = (_, message) => {
+        const clientMqtt = mqtt.connect("ws://broker.hivemq.com", {port: 8000, path: "/mqtt"});
+        clientMqtt.subscribe(userName);
+        clientMqtt.on("message", (_, message)=>{
+            // on message updates observer, in this way the chatHystory will be re-rended
             console.log(message.toString());
             let newValue = observer+1;
-            if (newValue > 100) return setObserver(0);
-            return setObserver(newValue);
-        };
-        setClientMqtt(client);
-    }, []);
+            setObserver(newValue);
+        });
 
-    // second useEffect that actually updates the chat
+        return () => {
+            clientMqtt.unsubscribe(userName);
+            clientMqtt.end();
+        };
+    }, [observer]);
+
+
+    // second useEffect that actually updates the chat when observer is changed
     useEffect(() => {
         const config = {
             headers: {

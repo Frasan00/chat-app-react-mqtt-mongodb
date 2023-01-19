@@ -31,7 +31,6 @@ export class UserClass{
 
     publishMessage(sendTo: string, message: string){
         this.clientMqtt.publish(topics.sendMessage(this.userName, sendTo), message);
-        console.log("Told "+sendTo+" to update messages");
         this.clientMqtt.publish(sendTo, "New message"); // tells the client is chatting with to update messages
         this.saveMessage(sendTo, message);
     };
