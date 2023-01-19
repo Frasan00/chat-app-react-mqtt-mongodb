@@ -8,7 +8,7 @@ global.Buffer = Buffer
 global.process = process
 const mqtt = require("mqtt");
 
-export const ChatPage = ({ userName, jwt, chattingWith }) => {
+export const ChatPage = ({ userName, jwt, chattingWith, setIsChatting }) => {
 
     const [chatHystory, setChatHistory] = useState([]);
     const [message, setMessage] = useState("");
@@ -75,9 +75,13 @@ export const ChatPage = ({ userName, jwt, chattingWith }) => {
         });
     };
 
+    const backToFriends = () => {
+        setIsChatting(null);
+    };
+
     return(
         <div className='App'>
-            <h1>Your are now chatting with {chattingWith}!</h1>
+            <h1>Your are now chatting with {chattingWith}!   <button onClick={() => backToFriends()} className="btn btn-danger"><a href="/auth">Exit chat   </a></button> </h1>
             <div className='Messages'>
                 {chatHystory.map((message, i) => 
                 message[0] === "0" ? 
