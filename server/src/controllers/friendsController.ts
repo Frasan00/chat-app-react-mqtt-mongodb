@@ -12,7 +12,7 @@ export const addNewFriend = async(req: Request, res: Response) => {
     const checkIfFriendExists = await User.findOne({userName: friendToAdd}); 
     if(!checkIfFriendExists) return res.status(404).send("The user you are trying to be friend with doesn't exist");
     const user = await User.findOne({userName: userName});
-    if(!user || user.userName === friendToAdd) return res.status(404).send("Error while adding friend", {Error: "you can't be friend with yourself!"});
+    if(!user || user.userName === friendToAdd) return res.status(404).json({Error: "you can't be friend with yourself!"});
 
     // duplicates
     let foundDuplicate;
